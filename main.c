@@ -26,6 +26,8 @@ int main()
     strcat(file, buf);
     memset(buf, 0x00, BUFFER_SIZE);
   }
+  execl("/bin/cat", "cat", "file1", NULL);
   printf("%s\n", file);
+  printf("%ld\n", strlen(file));
   return 0;
 }

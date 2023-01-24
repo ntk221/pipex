@@ -8,7 +8,8 @@ int main()
 {
     int     infile;
     pid_t   pid;
-
+    int     pipefd[2];
+ 
     pid = fork();
     if (pid == 0) //子プロセス
     {

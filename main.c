@@ -8,26 +8,36 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 int main()
 {
-  char  *buf;
-  char  *file = malloc(sizeof(char) * 1);
-  int   fd;
-  size_t    size;
+  int   fd[2];
+  pid_t pid;
 
-  fd = open("./file1", O_RDONLY);
-  while (1)
+  int ret1 = pipe(fd);
+  if (ret1 < 0)
   {
-    if (!(buf = get_next_line(fd)))
-      break;
-
-    size = strlen(file) * strlen(buf);
-    file = realloc(file, size); 
-    strcat(file, buf);
-    memset(buf, 0x00, BUFFER_SIZE);
+      perror("pipe");
+      exit(1);
   }
-  execl("/bin/cat", "cat", "file1", NULL);
-  printf("%s\n", file);
-  printf("%ld\n", strlen(file));
+
+  pid = fork();
+  if (pid == 0)
+  {
+    int infile = open("file1", O_RDONLY);
+    char *argv[] = {"cat", NULL};
+    dup2(infile, 0);
+    close(infile);
+    execv("/bin/cat", argv);
+    perror("/bin/cat");
+    exit(99);
+  }
+  else
+  {
+    waitpid(pid, NULL, 0);
+    puts("success!");
+    exit(10);
+  }
   return 0;
 }

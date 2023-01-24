@@ -10,11 +10,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-int main()
+
+int get_arg2(char *c, char *arg[], char *sym)
+{
+    int i = 0;
+    arg[i] = strtok(c, sym);
+    while(arg[i] != NULL)
+    {
+        i++;
+        arg[i] = strtok(NULL, sym);
+    }
+    return i;
+}
+
+int main(int argc, char **argv)
 {
   int   fd[2];
   pid_t pid;
+  char  *arg_c1[32], *arg_c2[32];
+  int   st;
 
+
+  // TODO: error ハンドリング
   int ret1 = pipe(fd);
   if (ret1 < 0)
   {
@@ -22,22 +39,35 @@ int main()
       exit(1);
   }
 
+  get_arg2(argv[2], arg_c1, " ");
+  get_arg2(argv[3], arg_c2, " ");
+  /*for(int i = 0; arg_c2[i] != NULL; i++)
+    printf("%s\n", arg_c2[i]);*/
+
   pid = fork();
   if (pid == 0)
   {
-    int infile = open("file1", O_RDONLY);
-    char *argv[] = {"cat", NULL};
+    int infile = open(argv[1], O_RDONLY);
     dup2(infile, 0);
     close(infile);
-    execv("/bin/cat", argv);
-    perror("/bin/cat");
+    dup2(fd[1], STDOUT_FILENO);
+    execv(arg_c1[0], arg_c1);
+    perror("error");
     exit(99);
   }
-  else
+  pid = fork();
+  if (pid == 0)
   {
-    waitpid(pid, NULL, 0);
-    puts("success!");
-    exit(10);
+    int outfile = open(argv[4], O_WRONLY);
+    dup2(outfile, fd[1]);
+    dup2(fd[0], STDIN_FILENO);
+    execv(arg_c2[0], arg_c2);
+    perror("error");
+    exit(99);
   }
+  close(fd[0]);
+  close(fd[1]);
+  wait(&st);
+  wait(&st);
   return 0;
 }

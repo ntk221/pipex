@@ -7,7 +7,7 @@ NAME = pipex
 all: $(NAME)
 
 $(NAME):
-	$(CC) $(SRCS) gnl.a -o $(NAME)
+	$(CC) $(SRCS) -o $(NAME)
 
 rm:
 	rm $(NAME)

@@ -1,0 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_path.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kazuki <kazuki@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/26 01:21:59 by kazuki            #+#    #+#             */
+/*   Updated: 2023/01/26 02:55:27 by kazuki           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "include/libft.h"
+
+char    *ft_getenv(char **envp)
+{
+    while (ft_strncmp("PATH", *envp, 4))
+        envp++;
+    return (*envp + 5);
+}
+
+char **get_path(char **envp)
+{
+    char *env;
+    char **dir;
+    int i = 0;
+    env = getenv("PATH");
+    dir = ft_split(env, ':');
+    return dir;
+}
+
+/*int main(int argc, char **argv, char **envp)
+{
+    char **dir;
+    dir = get_path(envp);
+    for (int i = 0; dir[i] != NULL; i++)
+        printf("%s\n", dir[i]);
+}*/

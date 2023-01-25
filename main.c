@@ -6,7 +6,7 @@
 /*   By: kazuki <kazuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 01:21:42 by kazuki            #+#    #+#             */
-/*   Updated: 2023/01/26 01:00:14 by kazuki           ###   ########.fr       */
+/*   Updated: 2023/01/26 03:09:56 by kazuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,14 @@
 #include <fcntl.h>
 #include <stdlib.h>
 #include "include/libft.h"
-
-// int open(const char *path, int oflag, ...);
-// ssize_t read(int fildes, void *buf, size_t nbyte);
-
+#include "include/pipex.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-char  buf[1000];
+// int open(const char *path, int oflag, ...);
+// ssize_t read(int fildes, void *buf, size_t nbyte);
 
 void  error(void)
 {
@@ -31,14 +29,14 @@ void  error(void)
   exit(1);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
   int   fd[2];
   pid_t pid;
   char  **arg_c1, **arg_c2;
   int   st;
+  char  path[512];
 
-  bzero(buf, 1000);
 
   // TODO: error ハンドリング
 
@@ -57,26 +55,38 @@ int main(int argc, char **argv)
   arg_c1 = ft_split(argv[2], ' ');
   arg_c2 = ft_split(argv[3], ' ');
   /*for (int i = 0; i < 2; i++)
-    printf("%s\n", arg_c2[i]);*/
+    printf("%s\n", arg_c1[i]);*/
+
+  char **dir = get_path(envp);
+  /*for (int i = 0; dir[i] != NULL; i++)
+    printf("%s\n", dir[i]);*/
+
   pid = fork();
   if (pid == 0)
   {
     close(fd[0]);
     dup2(infile, STDIN_FILENO);
     dup2(fd[1], STDOUT_FILENO);
-    execv(arg_c1[0], arg_c1);
-    perror("error");
-    exit(99);
+    for (int i = 0; dir[i] != NULL; i++)
+    {
+      sprintf(path, "%s/%s", dir[i], arg_c1[0]);
+      execv(path, arg_c1);
+    }
+    error();
   }
   pid = fork();
   if (pid == 0)
   {
+    bzero(path, strlen(path));
     close(fd[1]); // まさに重要！
     dup2(fd[0], STDIN_FILENO);
     dup2(outfile, STDOUT_FILENO);
-    execv(arg_c2[0], arg_c2);
-    perror("error");
-    exit(99);
+    for(int i = 0; dir[i] != NULL; i++)
+    {
+      sprintf(path, "%s/%s", dir[i], arg_c2[0]);
+      execv(path, arg_c2);
+    }
+    error();
   } 
   close(fd[0]);
   close(fd[1]);

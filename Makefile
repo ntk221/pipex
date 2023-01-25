@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 
-SRCS = main.c
+SRCS = main.c get_path.c
 LIBFT = libft
 NAME = pipex
 

@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_command.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kazuki <kazuki@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/01/26 05:27:47 by kazuki            #+#    #+#             */
+/*   Updated: 2023/01/26 05:28:02 by kazuki           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "include/pipex.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include "include/libft.h"
 
-char  *get_command(char **path, int i, char *cmd)
+char	*get_command(char **path, int i, char *cmd)
 {
 	char	*tmp;
 	char	*command;

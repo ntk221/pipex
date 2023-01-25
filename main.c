@@ -6,7 +6,7 @@
 /*   By: kazuki <kazuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 01:21:42 by kazuki            #+#    #+#             */
-/*   Updated: 2023/01/26 00:41:44 by kazuki           ###   ########.fr       */
+/*   Updated: 2023/01/26 01:00:14 by kazuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,12 @@ int main(int argc, char **argv)
 
   arg_c1 = ft_split(argv[2], ' ');
   arg_c2 = ft_split(argv[3], ' ');
-
+  /*for (int i = 0; i < 2; i++)
+    printf("%s\n", arg_c2[i]);*/
   pid = fork();
   if (pid == 0)
   {
+    close(fd[0]);
     dup2(infile, STDIN_FILENO);
     dup2(fd[1], STDOUT_FILENO);
     execv(arg_c1[0], arg_c1);
@@ -69,15 +71,12 @@ int main(int argc, char **argv)
   pid = fork();
   if (pid == 0)
   {
-    char  hoge[20];
-    bzero(hoge, 20);
+    close(fd[1]); // まさに重要！
     dup2(fd[0], STDIN_FILENO);
     dup2(outfile, STDOUT_FILENO);
-    read(0, hoge, 20);
-    write(1, &hoge, 20);
-    /*execv(arg_c2[0], arg_c2);
+    execv(arg_c2[0], arg_c2);
     perror("error");
-    exit(99);*/
+    exit(99);
   } 
   close(fd[0]);
   close(fd[1]);

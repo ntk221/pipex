@@ -1,28 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kazuki <kazuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/26 02:48:21 by kazuki            #+#    #+#             */
-/*   Updated: 2023/01/26 04:40:07 by kazuki           ###   ########.fr       */
+/*   Created: 2023/01/26 04:35:15 by kazuki            #+#    #+#             */
+/*   Updated: 2023/01/26 04:38:22 by kazuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#include "include/pipex.h"
+#include <stdlib.h>
+#include <stdio.h>
 
-typedef	struct s_pipex {
-	int		fd[2];
-	char	**arg_c1;
-	char	**arg_c2;
-	char	**path;
-} t_pipex;
+void	die(char *reason)
+{
+	perror(reason);
+	exit(1);
+}
 
-char	**get_path(char **envp);
-char 	*get_command(char **path, int i, char *cmd);
-void	free_all(char **arg_c1, char **arg_c2, char **path);
-void	die(char *reason);
-
-#endif
+void	free_all(char **arg_c1, char **arg_c2, char **path)
+{
+	for (int i = 0; arg_c1[i] != NULL; i++)
+		free(arg_c1[i]);
+	free(arg_c1);
+	for (int i = 0; arg_c2[i] != NULL; i++)
+		free(arg_c2[i]);
+	free(arg_c2);
+	for(int i = 0; path[i] != NULL; i++)
+		free(path[i]);
+	free(path);
+}

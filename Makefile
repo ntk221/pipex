@@ -1,16 +1,27 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 
-SRCS = main.c get_path.c
+SRCS = main.c get_path.c utils.c get_command.c
+OBJS = $(SRCS:%.c=%.o)
 LIBFT = libft
 NAME = pipex
 
+.PHONY: clean re all fclean
+
 all: $(NAME)
 
-$(NAME):
-	$(CC) $(SRCS) -L$(LIBFT) -o $(NAME) -lft
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT) -o $(NAME) -lft
 
-rm:
-	rm $(NAME)
+$(OBJS): $(SRCS)
+	$(CC) $(CFLAGS) $? -c 
+	@touch $(OBJS)
 
-re: rm $(NAME)
+fclean: clean 
+	@rm -f $(NAME)
+
+re: fclean all
+
+clean: 
+	@rm -f $(OBJS)
+

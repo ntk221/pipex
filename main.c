@@ -37,8 +37,11 @@ int main(int argc, char **argv, char **envp)
 
 
 	// TODO: error ハンドリング
-	if (argc != 0)
-
+	if (argc != 5)
+  {
+    ft_putendl_fd("error", 2);
+    exit(1);
+  }
 	infile = open(argv[1], O_RDONLY);
 	if (infile < 0)
 		die("open");

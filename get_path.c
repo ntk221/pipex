@@ -28,7 +28,7 @@ char	**get_path(char **envp)
 	char	**path;
 
 	env = ft_getenv(envp);
-	dir = ft_split(env, ':');
+	path = ft_split(env, ':');
 	return (path);
 }
 

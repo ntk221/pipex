@@ -25,11 +25,11 @@ char	*ft_getenv(char **envp)
 char	**get_path(char **envp)
 {
 	char	*env;
-	char	**dir;
+	char	**path;
 
 	env = ft_getenv(envp);
 	dir = ft_split(env, ':');
-	return (dir);
+	return (path);
 }
 
 /*int main(int argc, char **argv, char **envp)

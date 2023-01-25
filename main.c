@@ -6,7 +6,7 @@
 /*   By: kazuki <kazuki@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 01:21:42 by kazuki            #+#    #+#             */
-/*   Updated: 2023/01/26 03:09:56 by kazuki           ###   ########.fr       */
+/*   Updated: 2023/01/26 03:18:57 by kazuki           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@
 
 // int open(const char *path, int oflag, ...);
 // ssize_t read(int fildes, void *buf, size_t nbyte);
+
+__attribute__((destructor))
+static void destructor() {
+    system("leaks -q pipex");
+}
 
 void  error(void)
 {
@@ -87,10 +92,19 @@ int main(int argc, char **argv, char **envp)
       execv(path, arg_c2);
     }
     error();
-  } 
+  }
   close(fd[0]);
   close(fd[1]);
   wait(&st);
   wait(&st);
+  for (int i = 0; arg_c1[i] != NULL; i++)
+    free(arg_c1[i]);
+  free(arg_c1);
+  for (int i = 0; arg_c2[i] != NULL; i++)
+    free(arg_c2[i]);
+  free(arg_c2);
+  for(int i = 0; dir[i] != NULL; i++)
+    free(dir[i]);
+  free(dir);
   return 0;
 }
